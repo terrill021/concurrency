@@ -1,0 +1,14 @@
+server:
+  servlet:
+    context-path: /${spring.application.name}
+
+post:
+  ribbon:
+    listOfServers: https://jsonplaceholder.typicode.com
+    ConnectTimeout: 20000
+    ReadTimeout: 20000
+    IsSecure: true
+
+spring:
+  main:
+    allow-bean-definition-overriding: true

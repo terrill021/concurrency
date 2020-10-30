@@ -1,0 +1,5 @@
+spring:
+    application:
+        name: concurrency
+server:
+    port: 8080

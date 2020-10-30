@@ -15,7 +15,7 @@
 	<description>Concurrency examples</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 	</properties>
 
 	<dependencyManagement>
@@ -47,6 +47,33 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<!--Start spring cloud dependencies -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>rxjava</artifactId>
+					<groupId>io.reactivex</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+		</dependency>
+
+
+		<!--external depedencies-->
+		<!-- https://mvnrepository.com/artifact/io.reactivex.rxjava2/rxjava -->
+		<dependency>
+			<groupId>io.reactivex.rxjava2</groupId>
+			<artifactId>rxjava</artifactId>
+			<version>2.2.20</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
