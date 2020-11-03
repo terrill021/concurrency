@@ -19,17 +19,17 @@ import java.util.stream.Collectors;
   public Single<UserStory> composeUserService(
       String userId, PostService postService, UserService userService, CommentService commentService) {
 
-      Single<List<Post>> posts = postService.retrievePosts(userId)
+      Single<List<Post>> posts = Single.fromCallable(() -> postService.retrievePosts(userId))
               .flatMap(getListListFunction(commentService));
 
-      Single<User> user = userService.retrieveUser(userId);
+      Single<User> user = Single.fromCallable(() -> userService.retrieveUser(userId));
 
       return Single.zip(user, posts, UserStory::new);
   }
 
     private Function<List<Post>, Single<List<Post>>> getListListFunction(CommentService commentService) {
         return posts -> Single.merge(posts.stream()
-                .map(post -> commentService.retrieveComments(post.getId())
+                .map(post -> Single.fromCallable(() -> commentService.retrieveComments(post.getId()))
                     .map(comments -> new Post(post.getId(), post.getTitle(), post.getBody(), comments)))
                 .collect(Collectors.toList())).toList();
     }

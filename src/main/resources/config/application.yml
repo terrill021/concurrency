@@ -2,6 +2,20 @@ server:
   servlet:
     context-path: /${spring.application.name}
 
+logging:
+  level:
+    root: DEBUG
+    org:
+      springframework:
+        web: ERROR
+
+# feign log level
+feign:
+  client:
+    config:
+      feignName:
+        loggerLevel: full
+
 post:
   ribbon:
     listOfServers: https://jsonplaceholder.typicode.com
@@ -12,3 +26,10 @@ post:
 spring:
   main:
     allow-bean-definition-overriding: true
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+
+hystrix.command.default.execution:
+  timeout.enabled: true
+  isolation.thread.timeoutInMilliseconds: 50000
