@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
       String userId, PostService postService, UserService userService, CommentService commentService) {
 
       Single<List<Post>> posts = Single.fromCallable(() -> postService.retrievePosts(userId))
-              .flatMap(getListListFunction(commentService));
+              .flatMap(retrieveCommentsInPosts(commentService));
 
       Single<User> user = Single.fromCallable(() -> userService.retrieveUser(userId));
 
       return Single.zip(user, posts, UserStory::new);
   }
 
-    private Function<List<Post>, Single<List<Post>>> getListListFunction(CommentService commentService) {
+    private Function<List<Post>, Single<List<Post>>> retrieveCommentsInPosts(CommentService commentService) {
         return posts -> Single.merge(posts.stream()
                 .map(post -> Single.fromCallable(() -> commentService.retrieveComments(post.getId()))
                     .map(comments -> new Post(post.getId(), post.getTitle(), post.getBody(), comments)))
