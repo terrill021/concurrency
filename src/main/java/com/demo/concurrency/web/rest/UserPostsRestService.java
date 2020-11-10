@@ -2,6 +2,7 @@ package com.demo.concurrency.web.rest;
 
 import com.demo.concurrency.external.composers.UserStoryService;
 import com.demo.concurrency.external.models.UserStory;
+import com.demo.concurrency.external.rests.AlbumService;
 import com.demo.concurrency.external.rests.CommentService;
 import com.demo.concurrency.external.rests.PostService;
 import com.demo.concurrency.external.rests.UserService;
@@ -19,16 +20,19 @@ public class UserPostsRestService {
     private final CommentService commentService;
     private final PostService postService;
     private final UserService userService;
+    private final AlbumService albumService;
 
-    public UserPostsRestService(UserStoryService userStoryService, CommentService commentService, PostService postService, UserService userService) {
+    public UserPostsRestService(UserStoryService userStoryService, CommentService commentService,
+                                PostService postService, UserService userService, AlbumService albumService) {
         this.userStoryService = userStoryService;
         this.commentService = commentService;
         this.postService = postService;
         this.userService = userService;
+        this.albumService = albumService;
     }
 
     @GetMapping("{userId}")
     Single<UserStory> retrieveUserAndPosts(@PathVariable String userId) {
-        return userStoryService.composeUserService(userId, postService, userService, commentService);
+        return userStoryService.composeUserStory(userId, postService, userService, commentService, albumService);
     }
 }
