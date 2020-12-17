@@ -37,6 +37,7 @@ public class UserPostsRestService {
 
     @GetMapping("users/{userId}")
     Single<UserStory> retrieveUserAndPosts(@PathVariable String userId) {
+        System.out.printf("Root TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
         return userStoryService.composeUserStory(userId, postService, userService, commentService, albumService, photosService);
     }
 
