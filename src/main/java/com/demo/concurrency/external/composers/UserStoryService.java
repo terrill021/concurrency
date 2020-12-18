@@ -71,12 +71,6 @@ import java.util.stream.Collectors;
                 Flowable<Post>  pormisesPost= Single.merge(
                         posts.stream()
                         .map(post -> retrieveCommentsInPost(commentService, post)
-                        .observeOn(Schedulers.from(executor))
-                        .map(comments -> {
-                            System.out.printf("retrieveCommentsInPost MAP TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
-
-                            return comments;
-                        })
                         .map(comments -> new Post(post.getId(), post.getTitle(), post.getBody(), comments)))
                         .collect(Collectors.toList())
                 );
@@ -86,33 +80,50 @@ import java.util.stream.Collectors;
     }
 
     private Single<List<Comment>> retrieveCommentsInPost(CommentService commentService, Post post) {
-        System.out.printf("retrieveCommentsInPost TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
 
-        return Single.fromCallable(() -> commentService.retrieveComments(post.getId()));
+        return Single.fromCallable(() -> {
+            System.out.printf("retrieveCommentsInPost TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
+            return commentService.retrieveComments(post.getId());
+        }).subscribeOn(Schedulers.from(executor));
+
     }
 
     public Single<List<Album>> retrieveUserAlbums(String userId, AlbumService albumService) {
-        System.out.printf("retrieveUserAlbums TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
 
-        return Single.fromCallable(() -> albumService.retrieveAlbums(userId));
+        return Single.fromCallable(() -> {
+            System.out.printf("retrieveUserAlbums TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
+
+            return albumService.retrieveAlbums(userId);
+        }).subscribeOn(Schedulers.from(executor));
+
     }
 
     public Single<List<Photo>> retrievePhotos(String albumId, PhotosService photosService) {
-        System.out.printf("retrievePhotos TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
 
-        return Single.fromCallable(() -> photosService.retrievePhotos(albumId));
+        return Single.fromCallable(() -> {
+            System.out.printf("retrievePhotos TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
+
+            return photosService.retrievePhotos(albumId);
+        }).subscribeOn(Schedulers.from(executor));
     }
 
     private Single<List<Post>> retrieveUserPosts(String userId, PostService postService) {
-        System.out.printf("retrieveUserPosts TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
 
-        return Single.fromCallable(() -> postService.retrievePosts(userId));
+        return Single.fromCallable(() -> {
+            System.out.printf("retrieveUserPosts TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
+            return postService.retrievePosts(userId);
+        }).subscribeOn(Schedulers.from(executor));
+
     }
 
     private Single<User> retrieveUser(String userId, UserService userService) {
-        System.out.printf("retrieveUser TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
 
-        return Single.fromCallable(() -> userService.retrieveUser(userId));
+        return Single.fromCallable(() ->
+        {
+            System.out.printf("retrieveUser TreadID = %d  threadName: %s %n", Thread.currentThread().getId(), Thread.currentThread().getName());
+            return userService.retrieveUser(userId);
+        }).subscribeOn(Schedulers.from(executor));
+
     }
 
 }
